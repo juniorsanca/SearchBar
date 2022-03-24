@@ -7,6 +7,7 @@
 
 import Foundation
 
-struc; SearchResult : Codable do {
-    var artistName : String
+struct SearchResult : Codable{
+    var artistName : String?
+    var musicName: String?
 }
