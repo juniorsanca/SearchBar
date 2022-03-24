@@ -40,6 +40,17 @@ class SearchViewController: UIViewController {
         }
         //Data(contentsOf: url)
     }
+    
+    func parse (data: Data) -> [SearchResult] {
+        do {
+            let decoder = JSONDecoder()
+            let result = try decoder.decode(ResultArray.self, from: data)
+            return result.results
+        } catch {
+            print("json error:\(error)")
+            return []
+        }
+    }
 
 }
 
@@ -47,13 +58,16 @@ extension SearchViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         if !searchBar.text! .isEmpty {
             searchBar.resignFirstResponder()
-            
-            let url = searchUrl(searchText: searchBar.text)
+            // URL
+            let url = searchUrl(searchText: searchBar.text!)
             print("URL: \(url)")
             if let data = performRequest(url: url) {
                 print("data: \(data)")
-                //persing
+                //Data parsing
+                let results = parse(data: data)
+                print("results: \(results)")
             }
+            tableView.reloadData()
         }
     }
 }
